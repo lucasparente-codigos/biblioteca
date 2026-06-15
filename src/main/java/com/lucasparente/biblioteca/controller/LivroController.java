@@ -4,7 +4,6 @@ import com.lucasparente.biblioteca.model.Livro;
 import com.lucasparente.biblioteca.service.AutorService;
 import com.lucasparente.biblioteca.service.LivroService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,11 +15,14 @@ import java.util.List;
 @RequestMapping("/livros")
 public class LivroController {
 
-    @Autowired
-    private LivroService livroService;
+    // MELHORIA: injeção via construtor
+    private final LivroService livroService;
+    private final AutorService autorService;
 
-    @Autowired
-    private AutorService autorService;
+    public LivroController(LivroService livroService, AutorService autorService) {
+        this.livroService = livroService;
+        this.autorService = autorService;
+    }
 
     @GetMapping
     public String listarLivros(Model model) {
@@ -37,7 +39,9 @@ public class LivroController {
     }
 
     @PostMapping("/novo")
-    public String salvarLivro(@Valid @ModelAttribute("livro") Livro livro, BindingResult result, Model model) {
+    public String salvarLivro(@Valid @ModelAttribute("livro") Livro livro,
+                              BindingResult result,
+                              Model model) {
         if (result.hasErrors()) {
             model.addAttribute("autores", autorService.findAll());
             return "livros/formulario";
@@ -47,16 +51,19 @@ public class LivroController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarLivro(@PathVariable("id") Long id, Model model) {
+    public String editarLivro(@PathVariable Long id, Model model) {
         Livro livro = livroService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Livro inválido:" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Livro inválido: " + id));
         model.addAttribute("livro", livro);
         model.addAttribute("autores", autorService.findAll());
         return "livros/formulario";
     }
 
     @PostMapping("/editar/{id}")
-    public String atualizarLivro(@PathVariable("id") Long id, @Valid @ModelAttribute("livro") Livro livro, BindingResult result, Model model) {
+    public String atualizarLivro(@PathVariable Long id,
+                                 @Valid @ModelAttribute("livro") Livro livro,
+                                 BindingResult result,
+                                 Model model) {
         if (result.hasErrors()) {
             model.addAttribute("autores", autorService.findAll());
             return "livros/formulario";
@@ -66,8 +73,9 @@ public class LivroController {
         return "redirect:/livros";
     }
 
-    @GetMapping("/excluir/{id}")
-    public String excluirLivro(@PathVariable("id") Long id) {
+    // CORREÇÃO: mapeamento alterado para POST (mesma razão do AutorController)
+    @PostMapping("/excluir/{id}")
+    public String excluirLivro(@PathVariable Long id) {
         livroService.deleteById(id);
         return "redirect:/livros";
     }

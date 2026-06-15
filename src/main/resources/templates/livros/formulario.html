@@ -1,102 +1,102 @@
+<!-- src/main/resources/templates/livros/formulario.html -->
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${livro.id == null ? 'Novo Livro' : 'Editar Livro'}"></title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    .container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1 );
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    h1 {
-      color: #007bff;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    form div {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="text"], input[type="number"], select {
-      width: calc(100% - 22px);
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-    .error-message {
-      color: #dc3545;
-      font-size: 0.9em;
-      margin-top: 5px;
-    }
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      color: #007bff;
-      text-decoration: none;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <title th:text="${livro.id == null ? 'Novo Livro' : 'Editar Livro'} + ' — Biblioteca'"></title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div class="container">
-  <h1 th:text="${livro.id == null ? 'Novo Livro' : 'Editar Livro'}"></h1>
-  <form th:action="@{${livro.id == null ? '/livros/novo' : '/livros/editar/' + livro.id}}" th:object="${livro}" method="post">
-    <div>
-      <label for="titulo">Título:</label>
-      <input type="text" id="titulo" th:field="*{titulo}" />
-      <p th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" class="error-message"></p>
+<body class="page-wrapper">
+
+<nav class="navbar">
+  <a href="/" class="navbar__brand">📚 Biblioteca</a>
+  <ul class="navbar__links">
+    <li><a href="/autores">Autores</a></li>
+    <li><a href="/livros" class="active">Livros</a></li>
+  </ul>
+</nav>
+
+<main class="page-center">
+  <div class="container container--narrow">
+
+    <div class="page-header">
+      <h1 class="page-header__title"
+          th:text="${livro.id == null ? 'Novo Livro' : 'Editar Livro'}"></h1>
     </div>
-    <div>
-      <label for="isbn">ISBN:</label>
-      <input type="text" id="isbn" th:field="*{isbn}" />
-      <p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="error-message"></p>
-    </div>
-    <div>
-      <label for="anoPublicacao">Ano de Publicação:</label>
-      <input type="number" id="anoPublicacao" th:field="*{anoPublicacao}" />
-      <p th:if="${#fields.hasErrors('anoPublicacao')}" th:errors="*{anoPublicacao}" class="error-message"></p>
-    </div>
-    <div>
-      <label for="autor">Autor:</label>
-      <select id="autor" th:field="*{autor}">
-        <option th:each="autorOption : ${autores}" th:value="${autorOption.id}" th:text="${autorOption.nome}"></option>
-      </select>
-      <p th:if="${#fields.hasErrors('autor')}" th:errors="*{autor}" class="error-message"></p>
-    </div>
-    <button type="submit">Salvar</button>
-  </form>
-  <a href="/livros" class="back-link">Voltar para a Lista de Livros</a>
-</div>
+
+    <form th:action="@{${livro.id == null ? '/livros/novo' : '/livros/editar/' + livro.id}}"
+          th:object="${livro}"
+          method="post">
+
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text"
+               id="titulo"
+               th:field="*{titulo}"
+               th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid'"
+               class="form-control"
+               placeholder="Ex: Dom Casmurro" />
+        <p th:if="${#fields.hasErrors('titulo')}"
+           th:errors="*{titulo}"
+           class="form-error"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text"
+               id="isbn"
+               th:field="*{isbn}"
+               th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid'"
+               class="form-control"
+               placeholder="Ex: 978-3-16-148410-0" />
+        <p th:if="${#fields.hasErrors('isbn')}"
+           th:errors="*{isbn}"
+           class="form-error"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="anoPublicacao">Ano de Publicação</label>
+        <input type="number"
+               id="anoPublicacao"
+               th:field="*{anoPublicacao}"
+               th:classappend="${#fields.hasErrors('anoPublicacao')} ? 'is-invalid'"
+               class="form-control"
+               placeholder="Ex: 1899" />
+        <p th:if="${#fields.hasErrors('anoPublicacao')}"
+           th:errors="*{anoPublicacao}"
+           class="form-error"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="autor">Autor</label>
+        <select id="autor"
+                th:field="*{autor}"
+                th:classappend="${#fields.hasErrors('autor')} ? 'is-invalid'"
+                class="form-control">
+          <option value="">Selecione um autor...</option>
+          <option th:each="autorOption : ${autores}"
+                  th:value="${autorOption.id}"
+                  th:text="${autorOption.nome}"></option>
+        </select>
+        <p th:if="${#fields.hasErrors('autor')}"
+           th:errors="*{autor}"
+           class="form-error"></p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--success">Salvar</button>
+        <a href="/livros" class="btn btn--ghost">Cancelar</a>
+      </div>
+
+    </form>
+
+  </div>
+</main>
+
+<footer>
+  Projeto Biblioteca &mdash; Sistema Acadêmico
+</footer>
+
 </body>
 </html>

@@ -1,120 +1,84 @@
+<!-- src/main/resources/templates/livros/lista.html -->
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Livros</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    .container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1 );
-    }
-    h1 {
-      color: #007bff;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #007bff;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-    .button-group {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .button-group a, .button-group button {
-      display: inline-block;
-      background-color: #28a745;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-      margin: 5px;
-      transition: background-color 0.3s ease;
-    }
-    .button-group a.edit {
-      background-color: #ffc107;
-    }
-    .button-group a.delete {
-      background-color: #dc3545;
-    }
-    .button-group a:hover {
-      background-color: #218838;
-    }
-    .button-group a.edit:hover {
-      background-color: #e0a800;
-    }
-    .button-group a.delete:hover {
-      background-color: #c82333;
-    }
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      color: #007bff;
-      text-decoration: none;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <title>Livros — Biblioteca</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div class="container">
-  <h1>Lista de Livros</h1>
-  <div class="button-group">
-    <a href="/livros/novo">Novo Livro</a>
+<body class="page-wrapper">
+
+<nav class="navbar">
+  <a href="/" class="navbar__brand">📚 Biblioteca</a>
+  <ul class="navbar__links">
+    <li><a href="/autores">Autores</a></li>
+    <li><a href="/livros" class="active">Livros</a></li>
+  </ul>
+</nav>
+
+<main style="padding: 2rem 1rem; display: flex; justify-content: center;">
+  <div class="container">
+
+    <div class="page-header">
+      <h1 class="page-header__title">Livros</h1>
+      <a href="/livros/novo" class="btn btn--primary">+ Novo Livro</a>
+    </div>
+
+    <!-- Tabela de livros -->
+    <div th:if="${not #lists.isEmpty(livros)}" class="table-wrapper">
+      <table>
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Título</th>
+          <th>ISBN</th>
+          <th>Ano</th>
+          <th>Autor</th>
+          <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="livro : ${livros}">
+          <td>
+            <span class="badge" th:text="${livro.id}"></span>
+          </td>
+          <td th:text="${livro.titulo}"></td>
+          <td th:text="${livro.isbn}"></td>
+          <td th:text="${livro.anoPublicacao}"></td>
+          <td th:text="${livro.autor.nome}"></td>
+          <td>
+            <div class="td-actions">
+              <a th:href="@{/livros/editar/{id}(id=${livro.id})}"
+                 class="btn btn--warn btn--sm">Editar</a>
+
+              <!-- CORREÇÃO: exclusão via POST, não GET -->
+              <form th:action="@{/livros/excluir/{id}(id=${livro.id})}"
+                    method="post"
+                    onsubmit="return confirm('Tem certeza que deseja excluir este livro?')">
+                <button type="submit" class="btn btn--danger btn--sm">Excluir</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Estado vazio -->
+    <div th:if="${#lists.isEmpty(livros)}" class="empty-state">
+      <div class="empty-state__icon">📖</div>
+      <p class="empty-state__text">Nenhum livro cadastrado ainda.<br>
+        <a href="/livros/novo" style="color: var(--accent);">Adicione o primeiro</a>.
+      </p>
+    </div>
+
   </div>
-  <table>
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Título</th>
-      <th>ISBN</th>
-      <th>Ano Publicação</th>
-      <th>Autor</th>
-      <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="livro : ${livros}">
-      <td th:text="${livro.id}"></td>
-      <td th:text="${livro.titulo}"></td>
-      <td th:text="${livro.isbn}"></td>
-      <td th:text="${livro.anoPublicacao}"></td>
-      <td th:text="${livro.autor.nome}"></td>
-      <td>
-        <a th:href="@{/livros/editar/{id}(id=${livro.id})}" class="edit">Editar</a>
-        <a th:href="@{/livros/excluir/{id}(id=${livro.id})}" class="delete">Excluir</a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <a href="/" class="back-link">Voltar para a Página Inicial</a>
-</div>
+</main>
+
+<footer>
+  Projeto Biblioteca &mdash; Sistema Acadêmico
+</footer>
+
 </body>
 </html>

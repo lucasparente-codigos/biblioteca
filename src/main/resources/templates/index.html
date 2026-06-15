@@ -4,52 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .button-group a {
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            margin: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .button-group a:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
-<body>
-<div class="container">
-    <h1>Bem-vindo à Biblioteca</h1>
-    <div class="button-group">
-        <a href="/autores">Gerenciar Autores</a>
-        <a href="/livros">Gerenciar Livros</a>
+<body class="page-wrapper">
+
+<nav class="navbar">
+    <a href="/" class="navbar__brand">Biblioteca</a>
+    <ul class="navbar__links">
+        <li><a href="/autores">Autores</a></li>
+        <li><a href="/livros">Livros</a></li>
+    </ul>
+</nav>
+
+<main class="page-center">
+    <div class="container container--narrow">
+        <div class="home-hero">
+            <p class="home-hero__eyebrow">Sistema de Gerenciamento</p>
+            <h1 class="home-hero__title">Biblioteca</h1>
+            <p class="home-hero__subtitle">Gerencie autores e livros do acervo</p>
+
+            <div class="home-cards">
+                <a href="/autores" class="home-card">
+                    <span class="home-card__icon">✍️</span>
+                    <span class="home-card__label">Cadastro</span>
+                    <span class="home-card__title">Autores</span>
+                    <span class="home-card__desc">Adicione e gerencie os autores do acervo</span>
+                </a>
+                <a href="/livros" class="home-card">
+                    <span class="home-card__icon">📖</span>
+                    <span class="home-card__label">Acervo</span>
+                    <span class="home-card__title">Livros</span>
+                    <span class="home-card__desc">Cadastre e organize os livros da biblioteca</span>
+                </a>
+            </div>
+        </div>
     </div>
-</div>
+</main>
+
+<footer>
+    Projeto Biblioteca &mdash; Sistema Acadêmico
+</footer>
+
 </body>
 </html>

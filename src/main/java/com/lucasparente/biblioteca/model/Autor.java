@@ -1,4 +1,3 @@
-
 package com.lucasparente.biblioteca.model;
 
 import jakarta.persistence.Entity;
